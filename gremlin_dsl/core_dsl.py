@@ -3,9 +3,7 @@ from gremlin_python.process.traversal import Bytecode
 from gremlin_python.process.graph_traversal import __ as AnonymousTraversal
 from gremlin_python.process.graph_traversal import GraphTraversal
 from gremlin_python.process.graph_traversal import GraphTraversalSource
-from gremlin_python.process.anonymous_traversal import traversal
 from gremlin_python.process.strategies import *
-from gremlin_python.driver.driver_remote_connection import DriverRemoteConnection
 
 
 def get_db_endpoint():
@@ -74,17 +72,3 @@ class SocialTraversalSource(GraphTraversalSource):
             traversal.bytecode.add_step("has", "name", P.within(args))
 
         return traversal
-
-
-def main():
-    endpoint = get_db_endpoint()
-    connection = DriverRemoteConnection(endpoint, "g")
-
-    social = traversal(SocialTraversalSource).with_remote(endpoint)
-
-    print(social.persons("marko").knows("josh"))
-
-    connection.close()
-
-
-main()
