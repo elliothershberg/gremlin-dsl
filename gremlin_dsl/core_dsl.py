@@ -1,10 +1,4 @@
 from gremlin_python.process.traversal import P
-from gremlin_python.process.traversal import TextP
-from gremlin_python.process.traversal import Pop
-from gremlin_python.process.traversal import Scope
-from gremlin_python.process.traversal import Barrier
-from gremlin_python.process.traversal import Bindings
-from gremlin_python.process.traversal import WithOptions
 from gremlin_python.process.traversal import Bytecode
 from gremlin_python.process.graph_traversal import __ as AnonymousTraversal
 from gremlin_python.process.graph_traversal import GraphTraversal
@@ -13,12 +7,20 @@ from gremlin_python.process.anonymous_traversal import traversal
 from gremlin_python.process.strategies import *
 from gremlin_python.driver.driver_remote_connection import DriverRemoteConnection
 
+
 def get_db_endpoint():
     """Provide the local connection URL"""
     return "ws://localhost:8182/gremlin"
 
 
 class SocialTraversal(GraphTraversal):
+    """
+    Adds the domain level methods for the social graph.
+
+    The goal here is to move from Gremlin language to a vocabulary
+    with domain concepts.
+    """
+
     def knows(self, person_name):
         return self.out("knows").has_label("person").has("name", person_name)
 
@@ -30,11 +32,15 @@ class SocialTraversal(GraphTraversal):
 
 
 class __(AnonymousTraversal):
+    """This class is simply necessary for getting anonymous traversals to work."""
 
     graph_traversal = SocialTraversal
 
+    # Class methods only have access to the class, not class instance
     @classmethod
     def knows(cls, *args):
+        # Simply passes what is recieves to the social traversal
+        # Args here are graph, traversal strategy, and the bytecode
         return cls.graph_traversal(None, None, Bytecode()).knows(*args)
 
     @classmethod
@@ -47,6 +53,14 @@ class __(AnonymousTraversal):
 
 
 class SocialTraversalSource(GraphTraversalSource):
+    """
+    Extend graph source for the social graph.
+
+    Uses to the main graph source constructor,
+    and then as a place to add functions for retrieving
+    basic properties like people in the graph.
+    """
+
     def __init__(self, *args, **kwargs):
         super(SocialTraversalSource, self).__init__(*args, **kwargs)
         self.graph_traversal = SocialTraversal
@@ -66,22 +80,9 @@ def main():
     endpoint = get_db_endpoint()
     connection = DriverRemoteConnection(endpoint, "g")
 
-    # g = traversal().with_remote(connection)
-
-    # result = (
-    #     g.V()
-    #     .has_label("person")
-    #     .has("age", P.gt(30))
-    #     .order()
-    #     .by("age", Order.desc)
-    #     .to_list()
-    # )
-
-    # print(result)
-
     social = traversal(SocialTraversalSource).with_remote(endpoint)
-    
-    print(social.persons('marko').knows('josh'))
+
+    print(social.persons("marko").knows("josh"))
 
     connection.close()
 
