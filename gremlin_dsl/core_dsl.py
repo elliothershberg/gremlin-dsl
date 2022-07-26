@@ -1,14 +1,3 @@
-from gremlin_python import statics
-from gremlin_python.process.anonymous_traversal import traversal
-from gremlin_python.process.graph_traversal import __ as AnonymousTraversal
-from gremlin_python.process.strategies import *
-from gremlin_python.driver.driver_remote_connection import DriverRemoteConnection
-from gremlin_python.process.traversal import T
-from gremlin_python.process.traversal import Order
-from gremlin_python.process.traversal import Cardinality
-from gremlin_python.process.traversal import Column
-from gremlin_python.process.traversal import Direction
-from gremlin_python.process.traversal import Operator
 from gremlin_python.process.traversal import P
 from gremlin_python.process.traversal import TextP
 from gremlin_python.process.traversal import Pop
@@ -17,10 +6,12 @@ from gremlin_python.process.traversal import Barrier
 from gremlin_python.process.traversal import Bindings
 from gremlin_python.process.traversal import WithOptions
 from gremlin_python.process.traversal import Bytecode
-
+from gremlin_python.process.graph_traversal import __ as AnonymousTraversal
 from gremlin_python.process.graph_traversal import GraphTraversal
 from gremlin_python.process.graph_traversal import GraphTraversalSource
-
+from gremlin_python.process.anonymous_traversal import traversal
+from gremlin_python.process.strategies import *
+from gremlin_python.driver.driver_remote_connection import DriverRemoteConnection
 
 def get_db_endpoint():
     """Provide the local connection URL"""
