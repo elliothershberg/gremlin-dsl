@@ -27,3 +27,32 @@ $ bin/gremlin-server.sh conf/gremlin-server-modern.yaml
 ```
 
 Docs on using the Gremlin Server can be found [here](https://tinkerpop.apache.org/docs/current/reference/#gremlin-server).
+
+The package can then be installed from PyPi:
+
+```bash
+$ pip install gremlin-dsl
+```
+
+With the server running, you can use to the DSL to write queries against the Modern database:
+
+```python
+from gremlin_python.driver.driver_remote_connection import DriverRemoteConnection
+from gremlin_python.process.anonymous_traversal import traversal
+
+from gremlin_dsl.core_dsl import get_db_endpoint
+from gremlin_dsl.core_dsl import SocialTraversalSource
+
+def main():
+    endpoint = get_db_endpoint()
+    connection = DriverRemoteConnection(endpoint, "g")
+
+    social = traversal(SocialTraversalSource).with_remote(endpoint)
+
+    print(social.persons("marko").knows("josh"))
+
+    connection.close()
+
+if __name__ == "__main__":
+  main()
+```
