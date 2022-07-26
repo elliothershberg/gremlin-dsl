@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gremlin-dsl"
-version = "0.2.0"
+version = "0.3.0"
 description = "A small example DSL using gremlinpython"
 authors = ["Elliot Hershberg <eahershberg@gmail.com>"]
 readme = "README.md"
